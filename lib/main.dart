@@ -33,21 +33,20 @@ Future<void> main() async {
 
 }*/
 
-
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
-Future<void> main() async{
-
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Map<String, Map<String, String>> languages = await di_service.init();
 
@@ -55,33 +54,31 @@ Future<void> main() async{
   await PushNotificationService().setupInteractedMessage();
   HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp(languages: languages));
-
 }
 
 class MyApp extends StatelessWidget {
   final Map<String, Map<String, String>> languages;
-  const MyApp({Key? key,required this.languages}):super(key:key);
+  const MyApp({Key? key, required this.languages}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (theme){
-     return GetBuilder<LocalizationController>(builder: (localizeController){
-       return GetMaterialApp(
-         title:MyStrings.appName,
-         initialRoute: RouteHelper.splashScreen,
-         defaultTransition: Transition.topLevel,
-         transitionDuration: const Duration(milliseconds: 200),
-         getPages: RouteHelper.routes,
-         navigatorKey: Get.key,
-         theme: theme.darkTheme?dark:light,
-         debugShowCheckedModeBanner: false,
-         locale: localizeController.locale,
-         translations: Messages(languages: languages),
-         fallbackLocale: Locale(localizeController.locale.languageCode, localizeController.locale.countryCode),
-       );
-     });
+    return GetBuilder<ThemeController>(builder: (theme) {
+      return GetBuilder<LocalizationController>(builder: (localizeController) {
+        return GetMaterialApp(
+          title: MyStrings.appName,
+          initialRoute: RouteHelper.splashScreen,
+          defaultTransition: Transition.topLevel,
+          transitionDuration: const Duration(milliseconds: 200),
+          getPages: RouteHelper.routes,
+          navigatorKey: Get.key,
+          theme: theme.darkTheme ? dark : light,
+          debugShowCheckedModeBanner: false,
+          locale: localizeController.locale,
+          translations: Messages(languages: languages),
+          fallbackLocale: Locale(localizeController.locale.languageCode,
+              localizeController.locale.countryCode),
+        );
+      });
     });
   }
-
-
 }
